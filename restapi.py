@@ -1,7 +1,22 @@
-from flask import Flask
+from flask import Flask, request, g
 from flask_restful import reqparse, Api, Resource, abort, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
+import time
+import datetime
+import logging
 
+#logger creation for aborting Flask app's logs from log file
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(message)s')
+
+file_handler = logging.FileHandler("test.log")
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 app = Flask(__name__)
 api = Api(app)
@@ -78,10 +93,6 @@ color_put_args.add_argument("name", type=str, help="Name of the color")
 color_post_args = reqparse.RequestParser()
 color_post_args.add_argument("name", type=str, help="Name of the color")
 
-# def abort_if_product_doesnt_exist(product_id):
-#     if product_id not in products:
-#         abort(404, message="There is no such product with this ID!")
-
 #resource fields creation
 
 product_resource_fields = {
@@ -110,12 +121,23 @@ color_resource_fields = {
 #API endpoints creation
 
 class Product(Resource):
+    @app.before_request
+    def StartTimer():
+        g.start = time.time()
+
     @marshal_with(product_resource_fields)
     def get(self, product_id):
         result = ProductModel.query.filter_by(id=product_id).first()
 
         if not result:
             abort(404, message="There is no such product with that ID!")
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
 
         return result, 200
 
@@ -130,6 +152,13 @@ class Product(Resource):
         product = ProductModel(id=product_id, name= args['name'], price= args['price'])
         db.session.add(product)
         db.session.commit()
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
 
         return product, 201
 
@@ -148,6 +177,13 @@ class Product(Resource):
 
         db.session.commit()
 
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return result, 200
 
     def delete(self, product_id):
@@ -157,6 +193,14 @@ class Product(Resource):
 
         db.session.delete(result)
         db.session.commit()
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return '', 204
 
 
@@ -167,6 +211,13 @@ class Customer(Resource):
 
         if not result:
             abort(404, message="There is no such customer with that ID!")
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
 
         return result, 200
 
@@ -180,6 +231,13 @@ class Customer(Resource):
         customer = CustomerModel(id=c_id, name= args['name'], age= args['age'], gender= args['gender'])
         db.session.add(customer)
         db.session.commit()
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
 
         return customer, 201
 
@@ -199,6 +257,13 @@ class Customer(Resource):
         
         db.session.commit()
 
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return result, 200
 
     def delete(self, c_id):
@@ -211,6 +276,13 @@ class Customer(Resource):
         db.session.delete(result)
         db.session.commit()
 
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return '', 204
 
 class Brand(Resource):
@@ -221,6 +293,13 @@ class Brand(Resource):
         result = BrandModel.query.filter_by(id=brand_id).first()
         if not result:
             abort(404, message="There is no such brand with that ID!")
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
 
         return result, 200
 
@@ -237,6 +316,13 @@ class Brand(Resource):
         db.session.add(brand)
         db.session.commit()
 
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return brand, 201
 
     @marshal_with(brand_resource_fields)
@@ -252,6 +338,13 @@ class Brand(Resource):
         
         db.session.commit()
 
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return result, 200
 
     def delete(self, brand_id):
@@ -261,6 +354,13 @@ class Brand(Resource):
 
         db.session.delete(result)
         db.session.commit()
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
 
         return '', 204
 
@@ -274,6 +374,13 @@ class Color(Resource):
 
         if not result:
             abort(404, message="There is no such color with that ID!")
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
         
         return result, 200
 
@@ -290,6 +397,13 @@ class Color(Resource):
         db.session.add(color)
         db.session.commit()
 
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return color, 201
 
     @marshal_with(color_resource_fields)
@@ -305,6 +419,13 @@ class Color(Resource):
         
         db.session.commit()
 
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
+
         return result, 200
 
     def delete(self, color_id):
@@ -315,6 +436,13 @@ class Color(Resource):
 
         db.session.delete(result)
         db.session.commit()
+
+        myMethod = request.method
+        timestamp = datetime.datetime.now().timestamp()
+        now = time.time()
+        myTime = int((now - g.start)* 1000)
+
+        logger.debug(f"{myMethod},{myTime},{timestamp}")
 
         return '', 204
 
