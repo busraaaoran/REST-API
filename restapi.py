@@ -454,5 +454,5 @@ api.add_resource(Brand, "/brand/<int:brand_id>")
 api.add_resource(Color, "/color/<int:color_id>")
 
 if __name__ == "__main__":
-    app.run(debug= True)
+    app.run(debug= True, host='0.0.0.0', port=5000)
 
