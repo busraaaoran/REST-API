@@ -19,7 +19,7 @@ docker-compose up
 * /brand/<brand_id>
 * /color/<color_id>
 
-## Şimdi postman kullanrak nasıl request atabileceğimizi görelim.
+## Şimdi postman kullanarak nasıl request atabileceğimizi görelim.
 
 ![Postman GET request örneği](1.png)
 
