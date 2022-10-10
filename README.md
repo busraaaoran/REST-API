@@ -52,5 +52,4 @@ docker-compose up
 
 ---
 ---
-## Bana verilen görev içeriğindeki anahtar kod: gAAAAABgUIR7JP-Ap9yr3_buSRDFTeYefkB9keB1p-A8PAG7cAirysDytcS5SuPBy4ERkqyHgLgPyCmYPTSNRCZhEgFpb_KHLzmUAI7zCb5IzzsDSjvE8ZuNJGM2veJO92nKACorn1Coz_TM4rDsQB4vl9X0QePVccnIKj7Hxg9rptbxGX3izNW-GyZTQhTdEwyKh0i0cs1H
 
